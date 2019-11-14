@@ -1,0 +1,29 @@
+/* style referenced from SmartPhoneProducts2 */
+/* general styling */
+html {
+  
+    font-family: 'Arial', sans-serif;
+    background-color:pink;
+    font-size: 15px;
+    text-align: center;
+    
+    
+  }
+/*headings*/
+
+  h1, h2 {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    font-size: 20px;
+
+}
+/*image */
+img {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  border-radius: 8px;
+  margin-right: auto;
+  margin-left: auto;
+  
+}

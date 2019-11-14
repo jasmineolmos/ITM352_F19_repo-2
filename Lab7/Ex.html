@@ -1,0 +1,41 @@
+<script>
+
+name = "Jasmine";
+
+likesBeer = true;
+
+// document.write(name + ', ');
+
+/*if (likesBeer) {
+
+    document.write('I like beer ');
+    
+}
+else {
+
+document.write('beer is something I dislike');
+}
+*/
+
+// -- Price depends on quantity
+
+quantity = 50 ;
+
+if ( quantity > 0 ) {
+    price = 100;
+}
+    else if ( quantity >= 10 ) {
+        price = 50 ;
+    }
+    
+        else if ( quantity >= 25 ) {
+            price = 35;
+}
+    
+            else {
+                        price = "no purchase" ;
+                     }
+
+document.write ( quantity + ' products will cost ' + price + ' each.') ;
+
+</script>

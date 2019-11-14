@@ -1,0 +1,68 @@
+body{
+    width: 800px; 
+    margin: 0 auto;
+    
+}
+
+img{
+
+    width: 200px;
+    height:200px;
+}
+
+
+.rotate img
+{
+  animation: rotation .3s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+
+h1,h2{
+    color: darksalmon;
+    background: beige;
+    text-align:center
+
+
+
+
+}
+
+div{
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
+
+}
+
+
+div{
+
+    background-image:
+    url("./images/phone_globe.jpg" );
+    background-repeat:no-repeat;
+    background-size:cover;    
+}
+
+div{
+    border: 5px solid black;
+    display: flex;
+
+}
+
+
+body{
+    text-align:center;
+    border: 30px solid pink;
+    display: flex;
+    
+   
+}
