@@ -4,7 +4,7 @@
         let params = (new URL(document.location)).searchParams;
         var quantities = [];
         // processing the invoice to create the form from the data entered
-        if (params.has('submitPurchase')) {
+        if (params.has('submitPurchase')) { //gets the quantities that were entered in the form
           for (i = 0; i < products.length; i++) {
             if (params.has(`quantity${i}`)) {
               a_qty = params.get(`quantity${i}`);
@@ -28,11 +28,12 @@
         <title>Document</title>
       
         <link href="invoice_style.css" rel="stylesheet">
-      
+      <h1>Your Purchase Invoice</h1>
+      <h2>Jasmine's Makeup Store</h2>
       </head>
       
       <body>
-        <table border="1">
+        <table class = "center", border="1">
           <tbody>
             <tr>
               <th style="text-align: center;" width="43%">Item</th>
@@ -40,7 +41,7 @@
               <th style="text-align: center;" width="13%">price</th>
               <th style="text-align: center;" width="54%">extended price</th>
             </tr>
-            <script>
+            <script> //check which product there are quantities for, loop through them to display them.
               subtotal = 0;
               for (i = 0; i < products.length; i++) {
                 if (quantities[i] > 0) {
@@ -63,17 +64,15 @@
               var tax = tax_rate * subtotal;
       
               // Compute shipping
-              if (subtotal <= 50) {
-                shipping = 2;
+              if (subtotal <= 100) {
+                shipping = 10;
               }
-              else if (subtotal <= 100) {
-                shipping = 5;
-              }
+             
               else {
-                shipping = 0.05 * subtotal; // 5% of subtotal
+                shipping = 0 //shipping is free for orders over $100
               }
       
-              // Compute grand total
+              // computes the grand total
               var total = subtotal + tax + shipping;
             </script>
             <tr>
@@ -107,9 +106,7 @@
         </table>
         <div>
           <br><b>
-            OUR SHIPPING POLICY IS:A subtotal $0 - $49.99 will be $2 shipping
-            A subtotal $50 - $99.99 will be $5 shipping
-            Subtotals over $100 will be charged 5% of the subtotal amount
+            Shipping Policy: All orders over $100 get free shipping. Orders under $100 pay $10 for shipping.
           </b> </div>
       </body>
       

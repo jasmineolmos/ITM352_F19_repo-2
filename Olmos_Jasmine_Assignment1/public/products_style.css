@@ -3,7 +3,7 @@
 html {
   
     font-family: 'Arial', sans-serif;
-    background-color:pink;
+    background-image: url("background.jpg") ;
     font-size: 15px;
     text-align: center;
     
@@ -11,12 +11,18 @@ html {
   }
 /*headings*/
 
-  h1, h2 {
+  h1 {
     font-family: 'Arial', sans-serif;
     text-align: center;
-    font-size: 20px;
+    font-size: 40px;
+    }
 
-}
+h2 {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  font-size: 20px;
+  }
+
 /*image */
 img {
   width: 100px;
@@ -25,5 +31,6 @@ img {
   border-radius: 8px;
   margin-right: auto;
   margin-left: auto;
-  
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
