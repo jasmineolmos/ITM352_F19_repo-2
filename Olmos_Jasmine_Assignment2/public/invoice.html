@@ -1,0 +1,123 @@
+<script src="./product_list.js" type="text/javascript"> //uses get request for the product list</script> 
+<script>
+  //referenced from assignment 1 examples
+        let params = (new URL(document.location)).searchParams;
+        var quantities = [];
+        // processing the invoice to create the form from the data entered
+        if (params.has('submitPurchase')) { //gets the quantities that were entered in the form
+          for (i = 0; i < products.length; i++) {
+            if (params.has(`quantity${i}`)) {
+              a_qty = params.get(`quantity${i}`);
+              quantities[i] = a_qty;
+            }
+          }
+        } else {
+          document.write('Please enter a valid quantity!');
+        }
+        console.log(quantities);
+//notifies if the username and password are correct
+        window.onload = function () {
+    if (params.has('username')) {
+      alert('Thank you for your purchase ' + params.get('name'));
+    }
+    else {
+      alert('Please log in.');
+      window.location='/login.html' + window.location.search;
+    }
+  }
+      </script>
+      
+      <!DOCTYPE html>
+      <html lang="en">
+      
+      <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+      
+        <link href="invoice_style.css" rel="stylesheet">
+      <h1>Your Purchase Invoice</h1>
+      <h2>Jasmine's Makeup Store</h2>
+      </head>
+      
+      <body>
+        <table class = "center", border="1">
+          <tbody>
+            <tr>
+              <th style="text-align: center;" width="43%">Item</th>
+              <th style="text-align: center;" width="11%">quantity</th>
+              <th style="text-align: center;" width="13%">price</th>
+              <th style="text-align: center;" width="54%">extended price</th>
+            </tr>
+            <script> //check which product there are quantities for, loop through them to display them.
+              subtotal = 0;
+              for (i = 0; i < products.length; i++) {
+                if (quantities[i] > 0) {
+                  // product row
+                  extended_price = quantities[i] * products[i].price
+                  subtotal += extended_price;
+
+                  document.write(`
+            <tr>
+              <td width="43%">${products[i].product}</td>
+              <td align="center" width="11%">${quantities[i]}</td>
+              <td width="13%">\$${products[i].price}</td>
+              <td width="54%">\$${extended_price}</td>
+            </tr>
+            `);
+                }
+              }
+              // Compute tax
+              var tax_rate = 0.0575;
+              var tax = tax_rate * subtotal;
+      
+              // Compute shipping
+              if (subtotal <= 100) {
+                shipping = 10;
+              }
+             
+              else {
+                shipping = 0 //shipping is free for orders over $100
+              }
+      
+              // computes the grand total
+              var total = subtotal + tax + shipping;
+            </script>
+            <tr>
+              <td colspan="4" width="100%">&nbsp;</td>
+            </tr>
+            <tr>
+              <td style="text-align: center;" colspan="3" width="67%">Sub-total</td>
+              <td width="54%">$
+                <script>document.write(subtotal);</script>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @
+                  <script>document.write(100 * tax_rate);</script>%</span></td>
+              <td width="54%">$
+                <script>document.write(tax.toFixed(2));</script>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: center;" colspan="3" width="67%">Shipping</span></td>
+              <td width="54%">$
+                <script>document.write(shipping.toFixed(2));</script>
+              </td>
+            </tr>
+            <tr>
+              <td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>
+              <td width="54%"><strong>$
+                  <script>document.write(total.toFixed(2));</script></strong></td>
+            </tr>
+          </tbody>
+        </table>
+        <div>
+          <br><b>
+            Shipping Policy: All orders over $100 get free shipping. Orders under $100 pay $10 for shipping.
+          </b> </div>
+      </body>
+      
+      </html>

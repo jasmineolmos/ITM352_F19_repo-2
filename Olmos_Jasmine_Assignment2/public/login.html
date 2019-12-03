@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<script>
+        //get the string values from the submition
+        let params = (new URL(document.location)).searchParams; 
+
+        //referenced from assignment 1 examples
+
+        window.onload = function () { 
+            //if there is a log in error, alert the user that something is incorrect
+            if (params.has('LogError')) { 
+
+             
+                alert('Invalid Username or Password');
+            }
+        }
+
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="login_style.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+<div>
+<!-- 
+    Log in form, referenced from w3
+ -->
+    <form name="login" method="POST">
+        Login Page <br> <br>
+        <div class="container">
+                <label for="username"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" id="username" name="username" required><br>
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" onkeyup="" required><br>
+        <br>
+        <input type="submit" name="login" value="Login">
+    </div>
+    </form>
+    <script>
+   login.action="./login.html" + document.location.search;
+    </script>
+
+    <br>
+        <input type="button" name="newuser" value="New User" onclick="window.location='./register.html' + document.location.search;">
+         
+</table>
+</div>
+</body>
+</html>
