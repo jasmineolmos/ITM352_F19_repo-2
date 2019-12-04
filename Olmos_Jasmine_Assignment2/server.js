@@ -82,15 +82,12 @@ app.post("/register.html", function (req, res) {
     errors.push('Invalid character, only use letters for name!')
   }
   
-  // length of full name is less than 25
-  if ((req.body.name.length > 25)) {
+  // length of full name is between 0 and 25 
+  if ((req.body.name.length > 25 && req.body.name.length <0)) {
     errors.push('Full Name Too Long')
   }
   
-  // making sure something is entered 
-  if (req.body.name == "") {
-    errors.push('please enter a name! ');
-  }
+  
   
   //checks to see if username already exists
 
@@ -106,13 +103,16 @@ app.post("/register.html", function (req, res) {
   else {
     errors.push('Please only use letters and numbers for username')
   }
+  if ((req.body.username.length < 5 && req.body.username.length > 20)) {
+    errors.push('username must be between 5 and 20 characters')
+  }
 //validating password 
   //password is min 6 characters long 
-  if ((req.body.password.length < 6)) {
-    errors.push('Password must be longer than 6 characters')
+  if ((req.body.password.length < 5)) {
+    errors.push('Password must be longer than 5 characters')
   }
   // check to see if passwords match
-  if (req.body.password !== req.body.confirmpsw) { 
+  if (req.body.password !== req.body.passConfirm) { 
     errors.push('Passwords do not match!')
   }
 
