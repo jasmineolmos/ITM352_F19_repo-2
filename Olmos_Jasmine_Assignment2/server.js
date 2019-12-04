@@ -4,9 +4,8 @@ var fs = require('fs');
 var express = require('express'); 
 const querystring = require('querystring'); 
 const product_list = require('./public/product_list'); 
-var app = express(); 
 var parser = require('body-parser');
-
+var app = express();
 app.use(parser.urlencoded({ extended: true })); 
 
 // server for login, referenced from lab 14
@@ -31,59 +30,67 @@ if (fs.existsSync(filename)) { //check to see if file exists
 app.post("/login.html", function (req, res) {
   
   var LogError = [];
+
   console.log(req.body);
-  // the username is case insensitive 
+
+  //makes the username case insensitive 
+  //referenced from https://stackoverflow.com/questions/14201373/how-do-i-make-case-function-non-case-sensitive
   the_username = req.body.username.toLowerCase(); 
+
   //check to see if the username and password exist, referenced from lab 14
-  if (typeof users_reg_data[the_username] != 'undefined') { 
-    if (users_reg_data[the_username].password == req.body.password) { 
+  if (typeof users_reg_data[the_username] != 'undefined') { //if the username is not undefined (it exists)
+
+    if (users_reg_data[the_username].password == req.body.password) { //check if the password matches the username 
+
     req.query.username = the_username;
       console.log(users_reg_data[req.query.username].name);
       req.query.name = users_reg_data[req.query.username].name
-      res.redirect('/invoice.html?' + querystring.stringify(req.query)); // need to put query back into it
+      res.redirect('/invoice.html?' + querystring.stringify(req.query)); // if it is all good send them to the invoice 
       return;
-    } else{
+
+    } else{ //if the password is wrong but the username exists
       LogError.push = ('Invalid Password');
       console.log(LogError);
       req.query.username= the_username;
-      req.query.password=req.body.password;
-      req.query.LogError=LogError.join(';');
+      req.query.LogError=LogError.join(';');  //sends the error to the user 
     }
   }
   else {
     LogError.push = ('Invalid Username');
     console.log(LogError);
     req.query.username= the_username;
-    req.query.password=req.body.password;
-    req.query.LogError=LogError.join(';');
+    
+    req.query.LogError=LogError.join(';'); //sends the error to the user
   }
-  res.redirect('/login.html?' + querystring.stringify(req.query));
+  res.redirect('/login.html?' + querystring.stringify(req.query)); //redirects the user to the login 
 
 }
 );
 // processing the registration data
-app.post("/register.html", function (req, res) {
+//referenced from lab 14
+app.post("/register.html", function (req, res) { 
   qstr = req.body
   console.log(qstr);
 
   
-  var errors = [];
+  var errors = []; //assume no errors at first,
 
   //name contains only letters 
   if (/^[A-Za-z]+$/.test(req.body.name)) {
   }
   else {
-    errors.push('Use Letters Only for Full Name')
+    errors.push('Invalid character, only use letters for name!')
   }
-  // validating name
-  if (req.body.name == "") {
-    errors.push('Invalid Full Name');
-  }
-  // length of full name is less than 30
-  if ((req.body.name.length > 30)) {
+  
+  // length of full name is less than 25
+  if ((req.body.name.length > 25)) {
     errors.push('Full Name Too Long')
   }
   
+  // making sure something is entered 
+  if (req.body.name == "") {
+    errors.push('please enter a name! ');
+  }
   
   //checks to see if username already exists
 
@@ -91,27 +98,29 @@ app.post("/register.html", function (req, res) {
   if (typeof users_reg_data[reguser] != 'undefined') { 
     errors.push('Username taken')
   }
+  //validating username 
   //Check letters and numbers only
   
   if (/^[0-9a-zA-Z]+$/.test(req.body.username)) {
   }
   else {
-    errors.push('Letters And Numbers Only for Username')
+    errors.push('Please only use letters and numbers for username')
   }
-
+//validating password 
   //password is min 6 characters long 
   if ((req.body.password.length < 6)) {
-    errors.push('Password Too Short')
+    errors.push('Password must be longer than 6 characters')
   }
   // check to see if passwords match
   if (req.body.password !== req.body.confirmpsw) { 
-    errors.push('Password Not a Match')
+    errors.push('Passwords do not match!')
   }
 
   
 
 
   // if there are no errors, save the json data and send user to the invoice
+
   if (errors.length == 0) {
     console.log('none!');
     req.query.username = reguser;
@@ -135,42 +144,46 @@ app.post("/register.html", function (req, res) {
 }
 );
 
+//purchase function for the items 
+//referenced from assignment 1 examples 
+app.get('/purchase', function (req, res, next) { 
+  
 
-app.get('/purchase', function (req, res, next) { //getting the data from the form where action is '/purchase' 
-  console.log(Date.now() + ': Purchase made from ip ' + req.ip + ' data: ' + JSON.stringify(req.query)); // logging the date, IP address, and query of the purchase (quantities written in textboxes) into console
+  
+  let GET = req.query; 
+  console.log(GET); 
+  var hasValidQuantities = true; 
 
-  // Validating quantity data, go through each and check if good
-  // Done with help from Port
-  let GET = req.query; // GET is equal to getting the request from the query
-  console.log(GET); // putting the query that take from the form into the console
-  var hasValidQuantities = true; // empty textbox is assumed true - quantity assumed valid even before entering anything
-  var hasPurchases = false; //assume quantity of purchases are false (invalid) from the start
-  for (i = 0; i < product_list.length; i++) { // for every product in the array, increasing by 1
-    q = GET['quantity_textbox' + i]; // q is equal to the quantity pulled from what is entered into the textbox
-    if (isNonNegInt(q) == false) { //if the quantity is not an integer
-      hasValidQuantities = false; //hasValidQuantities is false 
+  var numpurchases = false; 
+  //get the quantities from the text box
+  for (i = 0; i < product_list.length; i++) { 
+    q = GET['quantity_textbox' + i]; 
+    if (isNonNegInt(q) == false) { 
+      hasValidQuantities = false; 
     }
-    if (q > 0) { // if the quantity entered in textbox is greater than 0
-      hasPurchases = true; // hasPurchases is true - because there is a quantity greater than 0 entered in the textbox
+    if (q > 0) { 
+      numpurchases = true; 
     }
-    console.log(hasValidQuantities, hasPurchases); // logging hasValidQuantities and hasPurchases into console to check validity (true or false)
+    console.log(hasValidQuantities, numpurchases); 
   }
 
-  // If it ok, send to invoice. if not, send back to the order form
-  qString = querystring.stringify(GET); //stringing the query together
-  if (hasValidQuantities == true && hasPurchases == true) { // if both hasValidQuantities and hasPurchases are true
-    res.redirect('./login.html?' + querystring.stringify(req.query)); // redirect to the invoice page with the query entered in the form
-  } else {    // if either hasValidQuantities or hasPurchases is false
-    req.query["hasValidQuantities"] = hasValidQuantities; // request the query for hasValidQuantities
-    req.query["hasPurchases"] = hasPurchases; // request the query for hasPurchases
-    console.log(req.query); // log the query into the console
-    res.redirect('./form.html?' + querystring.stringify(req.query)); // redirect to the form again, keeping the query that they wrote
-  }
+ //purchase quantities are valid so direct to the login page 
+  qString = querystring.stringify(GET); 
+  if (hasValidQuantities == true && numpurchases == true) { 
+        res.redirect('./login.html?' + querystring.stringify(req.query)); 
+  } 
+    //redirect back to the order form 
+    else {   
+      req.query["hasValidQuantities"] = hasValidQuantities; 
+      req.query["hasPurchases"] = numpurchases; 
+      console.log(req.query); 
+      res.redirect('./form.html?' + querystring.stringify(req.query));
+    }
 
 
 });
-
-app.use(express.static('./public')); // create a static server using express from the public folder
+//create a server
+app.use(express.static('./public'));
 
 
 var listener = app.listen(8080, () => { console.log('listening on port  ' + listener.address().port) });
@@ -191,19 +204,4 @@ function isNonNegInt(q, returnErrors = false) {
   return returnErrors ? errors : (errors.length == 0); 
 }
 
-//processing the form and making sure quantities entered in the textbox are valid
-function process_form(GET, response) { 
-  if (typeof GET['purchase'] != 'undefined') { 
-    for (i in products) { 
-      let q = GET[`quantity_textbox${i}`]; 
-      if (isNonNegInt(q)) { 
-        receipt += eval('`' + contents + '`'); 
-      } else { 
-        receipt += `<h3><font color="red">${q} is not a valid quantity for ${model}!</font></h3>`; //tell the user it is not a valid quantity
-      }
-    }
-    response.send(receipt); 
-    response.end(); 
-  }
-}
 
